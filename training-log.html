@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>トレーニング記録</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E9ECE8; --card:#FAFBF8; --ink:#141C26; --ink-soft:#5A6874; --line:#CDD4CE;
+  --iron:#2B2FC7; --iron-soft:#E2E3FA; --run:#00705A; --run-soft:#DCEDE8; --down:#B03A24;
+  --radius:10px;
+  --jp:"Zen Kaku Gothic New",-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
+  --num:"Barlow Condensed","Zen Kaku Gothic New",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--jp);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.num{font-family:var(--num);font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.wrap{max-width:600px;margin:0 auto;padding:0 14px 110px}
+
+header{position:sticky;top:0;z-index:20;background:var(--ink);color:var(--paper);padding:14px 14px 0}
+.hd-inner{max-width:600px;margin:0 auto}
+.hd-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.brand{font-family:var(--num);font-weight:700;font-size:25px;letter-spacing:.06em;text-transform:uppercase;line-height:1}
+.brand span{display:block;font-family:var(--jp);font-size:10px;letter-spacing:.28em;font-weight:500;opacity:.55;margin-top:5px}
+.hd-stat{text-align:right;font-family:var(--num);font-size:12px;letter-spacing:.08em;opacity:.7}
+.hd-stat b{display:block;font-size:21px;font-weight:600;opacity:1;line-height:1.1}
+nav{display:flex;gap:2px;margin-top:12px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+nav::-webkit-scrollbar{display:none}
+nav button{flex:0 0 auto;background:none;border:0;color:var(--paper);opacity:.5;font-family:var(--jp);font-size:13px;font-weight:500;padding:10px 12px 11px;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap}
+nav button.on{opacity:1;border-bottom-color:var(--paper)}
+nav button:focus-visible{outline:2px solid #fff;outline-offset:-3px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-top:14px}
+.eyebrow{font-family:var(--num);font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 10px}
+h2{font-size:16px;margin:0 0 4px;font-weight:700}
+h3{font-size:14px;margin:0 0 4px;font-weight:700}
+.muted{color:var(--ink-soft);font-size:13px}
+.hr{height:1px;background:var(--line);margin:14px 0}
+
+label{display:block;font-size:12px;font-weight:500;color:var(--ink-soft);margin-bottom:5px}
+input,select,textarea{width:100%;font-family:var(--jp);font-size:16px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:8px;padding:11px}
+input[type=number]{font-family:var(--num);font-size:19px;font-weight:600;text-align:center;padding:10px 4px}
+input[type=date]{font-family:var(--num);font-size:16px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--iron);outline-offset:-1px;border-color:var(--iron)}
+.row{display:flex;gap:10px}
+.row>*{flex:1;min-width:0}
+.f{margin-bottom:12px}
+
+button.btn{font-family:var(--jp);font-size:15px;font-weight:700;cursor:pointer;background:var(--ink);color:var(--paper);border:0;border-radius:8px;padding:14px 16px;width:100%;min-height:50px}
+button.btn.iron{background:var(--iron)}
+button.btn.run{background:var(--run)}
+button.btn:active{transform:translateY(1px)}
+button.ghost{background:none;border:1px solid var(--line);color:var(--ink);font-family:var(--jp);font-size:14px;font-weight:500;border-radius:8px;padding:11px 12px;cursor:pointer;min-height:44px}
+button.link{background:none;border:0;color:var(--ink-soft);font-size:12px;text-decoration:underline;cursor:pointer;padding:6px 4px;min-height:32px}
+button:focus-visible{outline:2px solid var(--iron);outline-offset:2px}
+
+.modes{display:flex;gap:8px;margin-bottom:14px}
+.modes button{flex:1;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:13px 8px;cursor:pointer;font-family:var(--jp);font-weight:700;font-size:14px;color:var(--ink-soft);min-height:50px}
+.modes button.on{color:#fff;border-color:transparent}
+.modes button.on[data-m=strength]{background:var(--iron)}
+.modes button.on[data-m=run]{background:var(--run)}
+
+.set{display:flex;align-items:center;gap:7px;margin-bottom:9px}
+.set .n{font-family:var(--num);font-size:13px;font-weight:600;color:var(--ink-soft);width:22px;flex:none;text-align:center}
+.set .u{font-size:11px;color:var(--ink-soft);flex:none;width:20px}
+.set .x{font-family:var(--num);color:var(--ink-soft);flex:none}
+.set button{flex:none;background:none;border:0;color:var(--ink-soft);font-size:19px;cursor:pointer;padding:0 6px;line-height:1;min-height:40px}
+
+.total{display:flex;align-items:baseline;justify-content:space-between;background:var(--iron-soft);border-radius:8px;padding:11px 14px;margin:12px 0}
+.total.r{background:var(--run-soft)}
+.total b{font-family:var(--num);font-size:30px;font-weight:700;line-height:1}
+.total small{font-size:12px;color:var(--ink-soft);font-family:var(--jp)}
+
+.item{border-top:1px solid var(--line);padding:12px 0;display:flex;gap:10px;align-items:flex-start}
+.item:first-of-type{border-top:0}
+.tag{flex:none;width:5px;align-self:stretch;border-radius:3px;background:var(--iron);min-height:36px}
+.tag.r{background:var(--run)}
+.item .body{flex:1;min-width:0}
+.item .ttl{font-weight:700;font-size:14px}
+.item .det{font-family:var(--num);font-size:14px;color:var(--ink-soft);letter-spacing:.02em}
+.item .memo{font-size:12px;color:var(--ink-soft);margin-top:2px;word-break:break-word}
+.item .val{flex:none;text-align:right;font-family:var(--num);font-weight:600;font-size:17px}
+.item .val em{display:block;font-family:var(--jp);font-style:normal;font-size:10px;color:var(--ink-soft);font-weight:400}
+.item .acts{flex:none;display:flex;flex-direction:column;gap:0}
+.pr{display:inline-block;font-family:var(--num);font-size:11px;font-weight:700;letter-spacing:.1em;background:var(--ink);color:var(--paper);border-radius:3px;padding:1px 5px;margin-left:6px;vertical-align:1px}
+
+.wknav{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.wknav b{font-family:var(--num);font-size:17px;letter-spacing:.03em}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px}
+.stat .k{font-size:11px;color:var(--ink-soft);letter-spacing:.05em}
+.stat .v{font-family:var(--num);font-size:26px;font-weight:700;line-height:1.15}
+.stat .v small{font-size:13px;font-weight:500;color:var(--ink-soft);margin-left:2px}
+.delta{font-family:var(--num);font-size:13px;font-weight:600}
+.up{color:var(--run)} .dn{color:var(--down)} .flat{color:var(--ink-soft)}
+
+.calhead{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px}
+.calhead div{text-align:center;font-family:var(--num);font-size:11px;font-weight:600;color:var(--ink-soft);letter-spacing:.06em}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cell{background:#fff;border:1px solid var(--line);border-radius:7px;min-height:54px;padding:4px 2px 3px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.cell.pad{background:transparent;border-color:transparent;cursor:default}
+.cell .d{font-family:var(--num);font-size:12px;font-weight:600;line-height:1;color:var(--ink-soft)}
+.cell.today{border-color:var(--ink);border-width:2px}
+.cell.sel{background:var(--ink)}
+.cell.sel .d,.cell.sel .kg{color:var(--paper)}
+.cell .bars{display:flex;gap:2px;height:5px;align-items:center}
+.cell .bar{width:11px;height:5px;border-radius:2px;background:var(--iron)}
+.cell .bar.r{background:var(--run)}
+.cell .kg{font-family:var(--num);font-size:10px;color:var(--ink-soft);line-height:1;margin-top:auto}
+.legend{display:flex;gap:12px;margin-top:10px;font-size:11px;color:var(--ink-soft);align-items:center;flex-wrap:wrap}
+.legend i{display:inline-block;width:12px;height:5px;border-radius:2px;margin-right:5px;vertical-align:1px}
+
+.chart{display:flex;align-items:flex-end;gap:6px;height:150px;margin:6px 0 0}
+.col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:2px;height:100%}
+.plates{display:flex;flex-direction:column-reverse;align-items:center;gap:2px;width:100%}
+.plate{height:6px;border-radius:2px;background:var(--iron);opacity:.85}
+.col.now .plate{opacity:1;background:var(--ink)}
+.col .lb{font-family:var(--num);font-size:10px;color:var(--ink-soft);margin-top:6px}
+.col .vv{font-family:var(--num);font-size:11px;font-weight:600;margin-bottom:3px}
+
+svg.wchart{width:100%;height:auto;display:block;overflow:visible}
+svg.wchart text{font-family:"Barlow Condensed",sans-serif;font-size:10px;fill:#5A6874}
+
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-family:var(--num);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);text-align:right;padding:0 0 7px;border-bottom:1px solid var(--line)}
+th:first-child{text-align:left}
+td{padding:10px 0;border-bottom:1px solid var(--line);text-align:right;font-family:var(--num);font-size:15px}
+td:first-child{text-align:left;font-family:var(--jp);font-size:13px;font-weight:500}
+
+.empty{text-align:center;color:var(--ink-soft);font-size:13px;padding:22px 10px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--paper);padding:12px 18px;border-radius:99px;font-size:13px;font-weight:500;opacity:0;transition:.25s;z-index:60;max-width:90vw;text-align:center}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:6px 13px;font-size:12px;cursor:pointer;font-family:var(--jp);min-height:34px}
+.chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.daygrp{font-family:var(--num);font-size:13px;font-weight:600;letter-spacing:.06em;color:var(--ink-soft);border-bottom:1px solid var(--line);padding-bottom:4px;margin:16px 0 2px}
+.daygrp:first-child{margin-top:0}
+dialog{border:0;border-radius:12px;padding:0;max-width:94vw;width:460px;background:var(--card);color:var(--ink)}
+dialog::backdrop{background:rgba(20,28,38,.55)}
+.dlg{padding:20px}
+textarea{height:170px;font-family:ui-monospace,monospace;font-size:11px;line-height:1.5}
+.note{border-left:2px solid var(--line);padding-left:14px;margin-bottom:18px}
+.note .ver{font-family:var(--num);font-size:17px;font-weight:700;letter-spacing:.04em}
+.note .dt{font-family:var(--num);font-size:11px;color:var(--ink-soft);letter-spacing:.08em}
+.note ul{margin:7px 0 0;padding-left:17px;font-size:13px}
+.note li{margin-bottom:3px}
+.drv{font-family:var(--num);font-size:11px;letter-spacing:.08em;border:1px solid var(--line);border-radius:4px;padding:1px 6px;color:var(--ink-soft)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-inner">
+    <div class="hd-top">
+      <div class="brand">Training Log<span>筋力 ／ 走行 ／ 体重</span></div>
+      <div class="hd-stat" id="hdStat"></div>
+    </div>
+    <nav id="nav"></nav>
+  </div>
+</header>
+
+<div class="wrap" id="view"></div>
+<div class="toast" id="toast"></div>
+<dialog id="dlg"><div class="dlg" id="dlgBody"></div></dialog>
+<input type="file" id="fileIn" accept="application/json,.json" style="display:none">
+
+<script>
+/* =====================================================================
+   storageService — UIから切り離したデータ層
+   driver: 'local'（localStorage）／'app'（アプリ内保存）／'memory'（一時）
+   将来 Supabase へ移行する場合は、この中の read/write と CRUD だけ
+   置き換えれば UI 側は変更不要。
+   ===================================================================== */
+const STORAGE_KEY = 'training_app_data';
+const LEGACY_KEY  = 'training-log-v1';
+
+const storageService = (() => {
+  let driver = 'memory';
+  let doc = null;
+
+  const empty = () => ({ version:2, profile:null, exercises:[], workouts:[], weights:[], goal:null, meta:{} });
+
+  function normalize(d){
+    const base = empty();
+    if(!d || typeof d !== 'object') return base;
+    const out = { ...base, ...d, meta:{ ...base.meta, ...(d.meta||{}) } };
+    // v1（entries / w,r 形式）からの移行
+    if(!out.workouts.length && Array.isArray(d.entries)){
+      out.workouts = d.entries.map(e => e.type === 'r'
+        ? { id:e.id, date:e.date, type:'run', distance:+e.km||0, minutes:+e.min||0, memo:e.memo||'' }
+        : { id:e.id, date:e.date, type:'strength', exercise:e.ex,
+            sets:(e.sets||[]).map(s=>({ weight:+s.w||+s.weight||0, reps:+s.r||+s.reps||0 })),
+            minutes:e.min||null, memo:e.memo||'' });
+    }
+    out.workouts.forEach(w=>{ if(w.type==='strength'&&!Array.isArray(w.sets)) w.sets=[]; if(w.memo==null) w.memo=''; });
+    return out;
+  }
+
+  async function readRaw(){
+    if(driver === 'local'){
+      const s = localStorage.getItem(STORAGE_KEY);
+      return s ? JSON.parse(s) : null;
+    }
+    if(driver === 'app'){
+      try{ const r = await window.storage.get(STORAGE_KEY); if(r&&r.value) return JSON.parse(r.value); }catch(e){}
+      try{ const r = await window.storage.get(LEGACY_KEY);  if(r&&r.value) return JSON.parse(r.value); }catch(e){}
+      return null;
+    }
+    return doc;
+  }
+  async function writeRaw(obj){
+    const json = JSON.stringify(obj);
+    if(driver === 'local'){ localStorage.setItem(STORAGE_KEY, json); return; }
+    if(driver === 'app'){ await window.storage.set(STORAGE_KEY, json); return; }
+  }
+
+  let busy=false, pending=false;
+  async function persist(){
+    if(busy){ pending=true; return; }
+    busy=true;
+    try{ await writeRaw(doc); }
+    catch(e){ ui.toast('保存できませんでした。空き容量をご確認ください'); }
+    busy=false;
+    if(pending){ pending=false; await persist(); }
+  }
+
+  return {
+    async init(){
+      try{
+        const k='__probe__'; localStorage.setItem(k,'1'); localStorage.removeItem(k); driver='local';
+      }catch(e){ driver = (typeof window.storage!=='undefined' && window.storage) ? 'app' : 'memory'; }
+      doc = normalize(await readRaw());
+      // localStorage が空でアプリ側に旧データがある場合は引き継ぐ
+      if(driver==='local' && !doc.profile && typeof window.storage!=='undefined' && window.storage){
+        try{
+          const r = await window.storage.get(LEGACY_KEY);
+          if(r&&r.value){ doc = normalize(JSON.parse(r.value)); await persist(); }
+        }catch(e){}
+      }
+      return doc;
+    },
+    driver: () => driver,
+    driverLabel: () => driver==='local' ? 'localStorage' : driver==='app' ? 'アプリ内保存' : '一時保存（未永続）',
+    getAll: () => doc,
+
+    /* --- workouts --- */
+    getWorkouts(){ return [...doc.workouts].sort((a,b)=> a.date===b.date ? (a.id<b.id?1:-1) : (a.date<b.date?1:-1)); },
+    async saveWorkout(w){ doc.workouts.push({ id:crypto.randomUUID ? crypto.randomUUID() : uid(), ...w }); await persist(); return doc; },
+    async updateWorkout(id, patch){ const i=doc.workouts.findIndex(x=>x.id===id); if(i>-1) doc.workouts[i]={...doc.workouts[i],...patch}; await persist(); return doc; },
+    async deleteWorkout(id){ doc.workouts=doc.workouts.filter(x=>x.id!==id); await persist(); return doc; },
+
+    /* --- exercises --- */
+    getExercises(){ return doc.exercises; },
+    async saveExercise(e){ doc.exercises.push({ id:uid(), ...e }); await persist(); return doc; },
+    async deleteExercise(id){ doc.exercises=doc.exercises.filter(x=>x.id!==id); await persist(); return doc; },
+
+    /* --- weights --- */
+    getWeights(){ return [...doc.weights].sort((a,b)=>a.date<b.date?-1:1); },
+    async saveWeight(date,kg){ doc.weights=doc.weights.filter(w=>w.date!==date); doc.weights.push({date,kg}); if(doc.profile) doc.profile.weight=kg; await persist(); return doc; },
+    async deleteWeight(date){ doc.weights=doc.weights.filter(w=>w.date!==date); await persist(); return doc; },
+
+    /* --- profile / goal / meta --- */
+    async saveProfile(p){ doc.profile={...(doc.profile||{}),...p}; await persist(); return doc; },
+    async saveGoal(g){ doc.goal=g; await persist(); return doc; },
+    async saveMeta(m){ doc.meta={...doc.meta,...m}; await persist(); return doc; },
+
+    /* --- backup --- */
+    exportJson(){ return JSON.stringify({ ...doc, exportedAt:new Date().toISOString(), app:'training-log', appVersion:APP_VERSION }, null, 2); },
+    async importJson(text){
+      const parsed = JSON.parse(text);
+      if(!parsed || typeof parsed!=='object' || (!Array.isArray(parsed.workouts) && !Array.isArray(parsed.entries)))
+        throw new Error('このファイルはトレーニング記録のバックアップではないようです');
+      doc = normalize(parsed); await persist(); return doc;
+    },
+    async reset(){ doc = empty(); await persist(); return doc; }
+  };
+})();
+
+/* ===================== アプリ本体 ===================== */
+const APP_VERSION='1.2.0';
+const ACT={1.2:'ほぼ運動しない',1.375:'週1〜3回運動',1.55:'週3〜5回運動',1.725:'週6〜7回運動',1.9:'アスリート級'};
+const RELEASES=[
+ {v:'1.2.0',d:'2026-08-20',items:[
+   '体重グラフに7日移動平均線を追加。日々のブレを取り除いたトレンドが見えます',
+   '目標体重を設定できるようになりました。グラフに目標ラインを描き、直近のペースから達成予測日を計算します',
+   'データ保存を storageService に集約し、localStorage を利用する構成に変更（対応していない環境では自動でフォールバック）',
+   'JSONバックアップの書き出しと復元を追加。復元前に上書き確認が入ります',
+   '履歴タブを追加。日付順にすべての記録を表示し、その場で編集・削除できます',
+   'すべての記録にメモ欄を追加。削除時に確認を表示するようにしました']},
+ {v:'1.1.0',d:'2026-08-20',items:[
+   'カレンダーをトップ画面に追加。日ごとの筋トレ・ランニング・体重が一目で分かります',
+   '体重タブを追加。日次で入力でき、推移を折れ線グラフで確認できます',
+   '土曜日に体重の記録をうながすお知らせを追加。「変更なし」で前回の値を引き継げます',
+   'リリースノートを設定タブから見られるようにしました']},
+ {v:'1.0.0',d:'2026-08-20',items:[
+   '種目を登録して、重量×回数のセット記録と総重量を集計',
+   'ランニングを距離・時間で記録し、平均ペースを表示',
+   '週次レポート（前週比・直近8週のボリューム推移・種目別の伸び・部位バランス）',
+   '年齢・身長・体重・活動量から基礎代謝と消費カロリーを推定',
+   '推定1RM、自己ベスト判定、前回セットの自動入力、CSV書き出し']}
+];
+
+let D=null;                       // 表示用のドキュメント（storageServiceが返す）
+let tab='home', mode='strength', ready=false;
+let draft={date:today(),exId:'',sets:[{weight:'',reps:''},{weight:'',reps:''},{weight:'',reps:''}],min:'',memo:'',km:'',rmin:''};
+let weekOffset=0, calMonth=null, selDate=today(), wRange=90, histFilter='all', histLimit=25;
+
+/* ---------- utils ---------- */
+function today(){return iso(new Date());}
+function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function parseD(s){const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);}
+function weekStart(d){const x=new Date(d);const k=(x.getDay()+6)%7;x.setDate(x.getDate()-k);x.setHours(0,0,0,0);return x;}
+function addD(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x;}
+function fmt(n,dec=0){return (Math.round(n*Math.pow(10,dec))/Math.pow(10,dec)).toLocaleString('ja-JP',{minimumFractionDigits:dec,maximumFractionDigits:dec});}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function paceStr(p){return p?Math.floor(p)+"'"+String(Math.round((p%1)*60)).padStart(2,'0')+'"':'—';}
+function wdJa(ds){return ['月','火','水','木','金','土','日'][(parseD(ds).getDay()+6)%7];}
+const ui={toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2400);}};
+const toast=ui.toast;
+
+/* ---------- 計算 ---------- */
+function volume(w){return w.type==='strength'?w.sets.reduce((a,s)=>a+(+s.weight||0)*(+s.reps||0),0):0;}
+function e1rm(w,r){return r>0?w*(1+r/30):0;}
+function bestE1rm(w){return w.type==='strength'?Math.max(0,...w.sets.map(s=>e1rm(+s.weight||0,+s.reps||0))):0;}
+function maxW(w){return w.type==='strength'?Math.max(0,...w.sets.map(s=>+s.weight||0)):0;}
+function weightOn(date){
+  const past=D.weights.filter(w=>w.date<=date).sort((a,b)=>a.date<b.date?1:-1);
+  if(past.length)return past[0].kg;
+  const all=storageService.getWeights();
+  return all.length?all[0].kg:(D.profile?D.profile.weight:60);
+}
+function latestWeight(){const l=storageService.getWeights();return l.length?l[l.length-1]:null;}
+function bmr(kg){const p=D.profile;if(!p)return 0;return 10*kg+6.25*p.height-5*p.age+(p.sex==='m'?5:p.sex==='f'?-161:-78);}
+function tdee(kg){return bmr(kg)*(D.profile?D.profile.act:1.375);}
+function runKcal(km,min,kg){if(!km||!min)return 0;const v=(km*1000)/min;return (0.2*v+3.5)*kg*min/1000*5;}
+function strKcal(min,kg){return 5.0*3.5*kg/200*min;}
+function wKcal(w){
+  const kg=weightOn(w.date);
+  return w.type==='run'?runKcal(+w.distance,+w.minutes,kg):strKcal(+w.minutes||w.sets.length*3,kg);
+}
+function exName(id){const x=D.exercises.find(e=>e.id===id);return x?x.name:'（削除された種目）';}
+function exPart(id){const x=D.exercises.find(e=>e.id===id);return x?x.part:'—';}
+function inRange(w,a,b){const d=parseD(w.date);return d>=a&&d<b;}
+function summarize(list){
+  const s={vol:0,sets:0,km:0,rmin:0,kcal:0,days:new Set()};
+  list.forEach(w=>{
+    s.days.add(w.date);s.kcal+=wKcal(w);
+    if(w.type==='strength'){s.vol+=volume(w);s.sets+=w.sets.length;}
+    else{s.km+=+w.distance||0;s.rmin+=+w.minutes||0;}
+  });
+  s.days=s.days.size;return s;
+}
+function delta(now,prev){
+  if(!prev)return now>0?{t:'新規',c:'up'}:{t:'—',c:'flat'};
+  const p=(now-prev)/prev*100;
+  if(Math.abs(p)<0.5)return{t:'±0%',c:'flat'};
+  return{t:(p>0?'▲ +':'▼ ')+fmt(p,1)+'%',c:p>0?'up':'dn'};
+}
+/* 7日移動平均（後方7日ぶんの平均） */
+function movingAvg(list,days=7){
+  return list.map((p,i)=>{
+    const t=parseD(p.date).getTime(), from=t-(days-1)*86400000;
+    let sum=0,n=0;
+    for(let j=i;j>=0;j--){ if(parseD(list[j].date).getTime()<from)break; sum+=list[j].kg;n++; }
+    return {date:p.date,kg:sum/n};
+  });
+}
+/* 直近28日の移動平均から最小二乗法で傾き（kg/日）を出す */
+function trendSlope(ma,days=28){
+  if(ma.length<4)return null;
+  const t1=parseD(ma[ma.length-1].date).getTime();
+  const pts=ma.filter(p=>parseD(p.date).getTime()>=t1-days*86400000)
+              .map(p=>({x:parseD(p.date).getTime()/86400000,y:p.kg}));
+  if(pts.length<4)return null;
+  const n=pts.length,sx=pts.reduce((a,p)=>a+p.x,0),sy=pts.reduce((a,p)=>a+p.y,0);
+  const sxy=pts.reduce((a,p)=>a+p.x*p.y,0),sxx=pts.reduce((a,p)=>a+p.x*p.x,0);
+  const den=n*sxx-sx*sx; if(!den)return null;
+  return (n*sxy-sx*sy)/den;
+}
+function forecast(){
+  const g=D.goal;const all=storageService.getWeights();
+  if(!g||!g.kg||all.length<4)return null;
+  const ma=movingAvg(all);const cur=ma[ma.length-1].kg;
+  const slope=trendSlope(ma);
+  const need=g.kg-cur;
+  if(Math.abs(need)<0.15)return{done:true,cur,slope:slope||0};
+  if(slope===null)return{cur,slope:null};
+  if(Math.abs(slope)<0.004||Math.sign(slope)!==Math.sign(need))return{cur,slope,off:true};
+  const days=Math.ceil(need/slope);
+  return{cur,slope,days,date:addD(new Date(),days)};
+}
+
+/* ---------- render ---------- */
+function render(){
+  const v=document.getElementById('view');
+  if(!ready){v.innerHTML='<div class="card empty">読み込み中…</div>';return;}
+  if(!D.profile){document.getElementById('nav').innerHTML='';document.getElementById('hdStat').innerHTML='';v.innerHTML=onboard();bindOnboard();return;}
+  renderNav();renderHdStat();
+  v.innerHTML = tab==='home'?viewHome() : tab==='log'?viewLog() : tab==='hist'?viewHist() : tab==='wt'?viewWt() :
+                tab==='rep'?viewRep() : tab==='ex'?viewEx() : tab==='rel'?viewRel() : viewSet();
+  bind();
+}
+function renderNav(){
+  const t=[['home','ホーム'],['log','記録'],['hist','履歴'],['wt','体重'],['rep','週次'],['ex','種目'],['set','設定']];
+  const cur=tab==='rel'?'set':tab;
+  document.getElementById('nav').innerHTML=t.map(([k,l])=>`<button data-tab="${k}" class="${cur===k?'on':''}">${l}</button>`).join('');
+  document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;weekOffset=0;histLimit=25;render();window.scrollTo(0,0);});
+}
+function renderHdStat(){
+  const w=latestWeight(),a=weekStart(new Date()),b=addD(a,7);
+  const s=summarize(D.workouts.filter(x=>inRange(x,a,b)));
+  document.getElementById('hdStat').innerHTML=`<b class="num">${fmt(s.vol)}<small style="font-size:11px"> kg</small></b>今週の総重量`+(w?` ／ ${fmt(w.kg,1)}kg`:'');
+}
+
+/* --- onboarding --- */
+function onboard(){
+  return `<div class="card" style="margin-top:20px">
+    <p class="eyebrow">Setup</p>
+    <h2>はじめに、あなたのことを教えてください</h2>
+    <p class="muted">消費カロリーの計算に使います。あとから設定タブで変更できます。</p>
+    <div class="hr"></div>
+    <div class="row f">
+      <div><label>年齢</label><input type="number" id="o_age" inputmode="numeric" placeholder="30"></div>
+      <div><label>身長 (cm)</label><input type="number" id="o_h" inputmode="decimal" placeholder="170"></div>
+      <div><label>体重 (kg)</label><input type="number" id="o_w" inputmode="decimal" placeholder="65"></div>
+    </div>
+    <div class="f"><label>性別（基礎代謝の計算式に使用）</label>
+      <select id="o_sex"><option value="m">男性</option><option value="f">女性</option><option value="x">指定しない</option></select></div>
+    <div class="f"><label>日常の活動量</label>
+      <select id="o_act">${Object.entries(ACT).map(([k,l])=>`<option value="${k}" ${k=='1.375'?'selected':''}>${l}</option>`).join('')}</select></div>
+    <button class="btn" id="o_go">記録をはじめる</button>
+    <div class="hr"></div>
+    <button class="ghost" id="o_import" style="width:100%">バックアップから復元する</button>
+  </div>`;
+}
+function bindOnboard(){
+  document.getElementById('o_go').onclick=async()=>{
+    const age=+document.getElementById('o_age').value,h=+document.getElementById('o_h').value,w=+document.getElementById('o_w').value;
+    if(!age||!h||!w){toast('年齢・身長・体重を入力してください');return;}
+    D=await storageService.saveProfile({age,height:h,weight:w,sex:document.getElementById('o_sex').value,act:+document.getElementById('o_act').value});
+    D=await storageService.saveWeight(today(),w);
+    D=await storageService.saveMeta({seenVersion:APP_VERSION});
+    if(!D.exercises.length){
+      for(const e of [['ベンチプレス','胸'],['スクワット','脚'],['デッドリフト','背中'],['ラットプルダウン','背中'],['ショルダープレス','肩']])
+        D=await storageService.saveExercise({name:e[0],part:e[1]});
+    }
+    render();
+  };
+  document.getElementById('o_import').onclick=pickImport;
+}
+
+/* --- ホーム：カレンダー --- */
+function dayMap(){
+  const m={};
+  D.workouts.forEach(w=>{
+    m[w.date]=m[w.date]||{s:0,r:0};
+    if(w.type==='strength')m[w.date].s++;else m[w.date].r++;
+  });
+  D.weights.forEach(w=>{m[w.date]=m[w.date]||{s:0,r:0};m[w.date].kg=w.kg;});
+  return m;
+}
+function viewHome(){
+  if(!calMonth){const t=new Date();calMonth=new Date(t.getFullYear(),t.getMonth(),1);}
+  const M=dayMap();
+  const lead=(new Date(calMonth).getDay()+6)%7;
+  const days=new Date(calMonth.getFullYear(),calMonth.getMonth()+1,0).getDate();
+  const cells=[];
+  for(let i=0;i<lead;i++)cells.push('<div class="cell pad"></div>');
+  for(let d=1;d<=days;d++){
+    const ds=iso(new Date(calMonth.getFullYear(),calMonth.getMonth(),d));
+    const x=M[ds]||{};
+    const bars=(x.s?'<div class="bar"></div>':'')+(x.r?'<div class="bar r"></div>':'');
+    cells.push(`<div class="cell ${ds===today()?'today':''} ${ds===selDate?'sel':''}" data-d="${ds}">
+      <div class="d">${d}</div><div class="bars">${bars}</div>
+      <div class="kg">${x.kg?fmt(x.kg,1):''}</div></div>`);
+  }
+  const mS=summarize(D.workouts.filter(w=>w.date.startsWith(iso(calMonth).slice(0,7))));
+  const day=D.workouts.filter(w=>w.date===selDate);
+  const dw=D.weights.find(w=>w.date===selDate);
+  return `
+  <div class="card">
+    <div class="wknav" style="margin-bottom:12px">
+      <button class="ghost" id="c_prev">◀</button>
+      <b class="num">${calMonth.getFullYear()}年 ${calMonth.getMonth()+1}月</b>
+      <button class="ghost" id="c_next">▶</button>
+    </div>
+    <div class="calhead">${['月','火','水','木','金','土','日'].map(d=>`<div>${d}</div>`).join('')}</div>
+    <div class="cal">${cells.join('')}</div>
+    <div class="legend"><span><i style="background:var(--iron)"></i>筋トレ</span><span><i style="background:var(--run)"></i>ラン</span><span>数字＝体重(kg)</span></div>
+    <div class="hr"></div>
+    <div class="grid3">
+      <div><div class="muted" style="font-size:11px">今月の総重量</div><div class="num" style="font-size:20px;font-weight:700">${fmt(mS.vol)}<span style="font-size:12px">kg</span></div></div>
+      <div><div class="muted" style="font-size:11px">走行距離</div><div class="num" style="font-size:20px;font-weight:700">${fmt(mS.km,1)}<span style="font-size:12px">km</span></div></div>
+      <div><div class="muted" style="font-size:11px">実施日数</div><div class="num" style="font-size:20px;font-weight:700">${mS.days}<span style="font-size:12px">日</span></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <p class="eyebrow">${selDate}（${wdJa(selDate)}）</p>
+    ${dw?`<p class="muted" style="margin-top:-4px">この日の体重 <b class="num" style="font-size:18px;color:var(--ink)">${fmt(dw.kg,1)}</b> kg</p>`:'<p class="muted" style="margin-top:-4px">体重の記録なし</p>'}
+    <div class="hr"></div>
+    ${day.length?day.map(itemHtml).join(''):'<div class="empty">この日のトレーニング記録はありません。</div>'}
+    <button class="ghost" id="h_add" style="width:100%;margin-top:12px">この日に記録する</button>
+  </div>`;
+}
+
+/* --- 記録 --- */
+function lastFor(exId,beforeDate){
+  return D.workouts.filter(w=>w.type==='strength'&&w.exercise===exId&&w.date<beforeDate).sort((a,b)=>a.date<b.date?1:-1)[0];
+}
+function viewLog(){
+  const day=D.workouts.filter(w=>w.date===draft.date);
+  const dayS=summarize(day);
+  const vol=draft.sets.reduce((a,s)=>a+(+s.weight||0)*(+s.reps||0),0);
+  const kg=weightOn(draft.date);
+  const prev=draft.exId?lastFor(draft.exId,draft.date):null;
+
+  const strForm=`
+    <div class="f"><label>種目</label>
+      <select id="d_ex"><option value="">選択してください</option>
+        ${D.exercises.map(e=>`<option value="${e.id}" ${draft.exId===e.id?'selected':''}>${esc(e.name)}</option>`).join('')}</select>
+      <button class="link" id="d_new">＋ 新しい種目を追加</button></div>
+    ${prev?`<p class="muted" style="margin:-6px 0 10px">前回 ${prev.date}：${prev.sets.map(s=>`${s.weight}kg×${s.reps}`).join(' / ')}　<button class="link" id="d_copy">この内容を入れる</button></p>`:''}
+    <label>セット（重量 × 回数）</label>
+    <div>${draft.sets.map((s,i)=>`<div class="set">
+      <span class="n">${i+1}</span>
+      <input type="number" inputmode="decimal" class="s_w" data-i="${i}" value="${s.weight}" placeholder="0"><span class="u">kg</span>
+      <span class="x">×</span>
+      <input type="number" inputmode="numeric" class="s_r" data-i="${i}" value="${s.reps}" placeholder="0"><span class="u">回</span>
+      <button class="s_del" data-i="${i}" aria-label="このセットを削除">✕</button></div>`).join('')}</div>
+    <button class="ghost" id="d_add" style="width:100%;margin-top:4px">＋ セットを追加</button>
+    <div class="f" style="margin-top:12px"><label>所要時間（分・任意／消費カロリーの精度が上がります）</label>
+      <input type="number" inputmode="numeric" id="d_min" value="${draft.min}" placeholder="${draft.sets.length*3}"></div>
+    <div class="f"><label>メモ（任意）</label><input id="d_memo" value="${esc(draft.memo)}" placeholder="フォーム、体調、RPEなど"></div>
+    <div class="total"><span><small>この記録の総重量</small><br><b class="num">${fmt(vol)}</b> kg</span>
+      <span style="text-align:right"><small>推定消費</small><br><b class="num" style="font-size:20px">${fmt(strKcal(+draft.min||draft.sets.length*3,kg))}</b> kcal</span></div>
+    <button class="btn iron" id="d_save">筋トレを記録する</button>`;
+
+  const pace=(+draft.km>0&&+draft.rmin>0)?(+draft.rmin)/(+draft.km):0;
+  const runForm=`
+    <div class="row f">
+      <div><label>距離 (km)</label><input type="number" inputmode="decimal" id="r_km" value="${draft.km}" placeholder="5"></div>
+      <div><label>時間 (分)</label><input type="number" inputmode="decimal" id="r_min" value="${draft.rmin}" placeholder="30"></div></div>
+    <div class="f"><label>メモ（任意）</label><input id="r_memo" value="${esc(draft.memo)}" placeholder="コース、天気、感覚など"></div>
+    <div class="total r"><span><small>平均ペース</small><br><b class="num">${paceStr(pace)}</b> /km</span>
+      <span style="text-align:right"><small>推定消費</small><br><b class="num" style="font-size:20px">${fmt(runKcal(+draft.km,+draft.rmin,kg))}</b> kcal</span></div>
+    <button class="btn run" id="r_save">ランニングを記録する</button>`;
+
+  return `<div class="card">
+    <div class="f"><label>日付</label><input type="date" id="d_date" value="${draft.date}"></div>
+    <div class="modes">
+      <button data-m="strength" class="${mode==='strength'?'on':''}">筋力トレーニング</button>
+      <button data-m="run" class="${mode==='run'?'on':''}">ランニング</button></div>
+    ${mode==='strength'?strForm:runForm}
+  </div>
+  <div class="card">
+    <p class="eyebrow">${draft.date} の記録</p>
+    ${day.length?`<div class="grid2" style="margin-bottom:12px">
+      <div class="stat"><div class="k">総重量</div><div class="v">${fmt(dayS.vol)}<small>kg</small></div></div>
+      <div class="stat"><div class="k">消費カロリー</div><div class="v">${fmt(dayS.kcal)}<small>kcal</small></div></div></div>
+      ${day.map(itemHtml).join('')}`:'<div class="empty">まだ記録がありません。上のフォームから追加してください。</div>'}
+  </div>`;
+}
+function itemHtml(w){
+  const acts=`<div class="acts"><button class="link edit" data-id="${w.id}">編集</button><button class="link del" data-id="${w.id}">削除</button></div>`;
+  if(w.type==='run'){
+    const p=(+w.distance>0&&+w.minutes>0)?(+w.minutes)/(+w.distance):0;
+    return `<div class="item"><div class="tag r"></div><div class="body">
+      <div class="ttl">ランニング</div>
+      <div class="det">${fmt(w.distance,2)} km ・ ${fmt(w.minutes)} 分 ・ ${paceStr(p)}/km</div>
+      ${w.memo?`<div class="memo">${esc(w.memo)}</div>`:''}</div>
+      <div class="val">${fmt(wKcal(w))}<em>kcal</em></div>${acts}</div>`;
+  }
+  return `<div class="item"><div class="tag"></div><div class="body">
+    <div class="ttl">${esc(exName(w.exercise))}${prBadges(w)}</div>
+    <div class="det">${w.sets.map(s=>`${s.weight}×${s.reps}`).join(' / ')}　推定1RM ${fmt(bestE1rm(w),1)}kg</div>
+    ${w.memo?`<div class="memo">${esc(w.memo)}</div>`:''}</div>
+    <div class="val">${fmt(volume(w))}<em>kg</em></div>${acts}</div>`;
+}
+function prBadges(w){
+  const hist=D.workouts.filter(x=>x.type==='strength'&&x.exercise===w.exercise&&x.id!==w.id&&x.date<=w.date);
+  if(!hist.length)return'';
+  let b='';
+  if(maxW(w)>Math.max(...hist.map(maxW)))b+='<span class="pr">最大重量 PR</span>';
+  if(volume(w)>Math.max(...hist.map(volume)))b+='<span class="pr">ボリューム PR</span>';
+  return b;
+}
+
+/* --- 履歴 --- */
+function viewHist(){
+  let list=storageService.getWorkouts();
+  if(histFilter!=='all')list=list.filter(w=>w.type===histFilter);
+  const shown=list.slice(0,histLimit);
+  let html='',cur='';
+  shown.forEach(w=>{
+    if(w.date!==cur){cur=w.date;html+=`<div class="daygrp">${cur}（${wdJa(cur)}）</div>`;}
+    html+=itemHtml(w);
+  });
+  return `<div class="card">
+    <p class="eyebrow">History</p>
+    <div class="chips" style="margin-bottom:6px">
+      ${[['all','すべて'],['strength','筋トレ'],['run','ランニング']].map(([k,l])=>`<button class="chip hf ${histFilter===k?'on':''}" data-f="${k}">${l}</button>`).join('')}
+    </div>
+    <p class="muted">${list.length} 件（新しい順）</p>
+    <div class="hr"></div>
+    ${shown.length?html:'<div class="empty">記録がありません。</div>'}
+    ${list.length>histLimit?'<button class="ghost" id="h_more" style="width:100%;margin-top:14px">さらに表示する</button>':''}
+  </div>`;
+}
+
+/* --- 体重 --- */
+function viewWt(){
+  const all=storageService.getWeights();
+  const cut=wRange?iso(addD(new Date(),-wRange)):'0000-00-00';
+  const list=all.filter(w=>w.date>=cut);
+  const cur=latestWeight(),p=D.profile,g=D.goal;
+  const first=list[0],change=(cur&&first)?cur.kg-first.kg:0;
+  const ma=all.length?movingAvg(all):[];
+  const maNow=ma.length?ma[ma.length-1].kg:0;
+  const slope=ma.length?trendSlope(ma):null;
+  const fc=forecast();
+
+  return `<div class="card">
+    <p class="eyebrow">Body weight</p>
+    <div class="row f">
+      <div style="flex:1.2"><label>体重 (kg)</label><input type="number" step="0.1" inputmode="decimal" id="w_kg" placeholder="${cur?fmt(cur.kg,1):'65.0'}"></div>
+      <div style="flex:1.6"><label>日付</label><input type="date" id="w_date" value="${today()}"></div></div>
+    <button class="btn" id="w_add">体重を記録する</button>
+    <p class="muted" style="margin:8px 0 0">同じ日に入れ直すと上書きされます。</p>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px">
+      <p class="eyebrow" style="margin:0">推移</p>
+      <div class="chips">${[[30,'30日'],[90,'90日'],[0,'全期間']].map(([v,l])=>`<button class="chip wr ${wRange===v?'on':''}" data-r="${v}">${l}</button>`).join('')}</div>
+    </div>
+    ${list.length>1?weightChart(list,g):'<div class="empty">記録が2件以上たまるとグラフが表示されます。</div>'}
+    <div class="legend" style="margin-top:8px">
+      <span><i style="background:#2B2FC7;opacity:.35"></i>日々の記録</span>
+      <span><i style="background:#141C26"></i>7日移動平均</span>
+      ${g&&g.kg?`<span><i style="background:#B03A24"></i>目標 ${fmt(g.kg,1)}kg</span>`:''}
+    </div>
+    <div class="hr"></div>
+    <div class="grid3">
+      <div><div class="muted" style="font-size:11px">7日平均</div><div class="num" style="font-size:22px;font-weight:700">${maNow?fmt(maNow,1):'—'}<span style="font-size:12px">kg</span></div></div>
+      <div><div class="muted" style="font-size:11px">週あたり増減</div><div class="num delta ${slope>0.005?'dn':slope<-0.005?'up':'flat'}" style="font-size:22px;font-weight:700">${slope===null?'—':(slope>0?'+':'')+fmt(slope*7,2)}<span style="font-size:12px">kg</span></div></div>
+      <div><div class="muted" style="font-size:11px">期間内の増減</div><div class="num delta ${change>0.05?'dn':change<-0.05?'up':'flat'}" style="font-size:22px;font-weight:700">${change>0?'+':''}${fmt(change,1)}<span style="font-size:12px">kg</span></div></div>
+    </div>
+    <p class="muted" style="margin-top:10px">移動平均は直近7日ぶんの平均。週あたり増減は直近28日の移動平均から算出しています。</p>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Goal</p>
+    <div class="row f">
+      <div><label>目標体重 (kg)</label><input type="number" step="0.1" inputmode="decimal" id="g_kg" value="${g&&g.kg?g.kg:''}" placeholder="60.0"></div>
+      <div><label>目標日（任意）</label><input type="date" id="g_date" value="${g&&g.date?g.date:''}"></div></div>
+    <div class="row">
+      <button class="btn" id="g_save" style="flex:2">目標を保存</button>
+      ${g&&g.kg?'<button class="ghost" id="g_clear" style="flex:1">解除</button>':''}
+    </div>
+    ${g&&g.kg?goalPanel(fc,g,maNow):'<p class="muted" style="margin:12px 0 0">目標を設定すると、グラフに目標ラインが引かれ、直近のペースから到達予測日を計算します。</p>'}
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">記録一覧</p>
+    ${all.length?`<table><tbody>${[...all].reverse().slice(0,40).map((w,i,arr)=>{
+      const nx=arr[i+1],d=nx?w.kg-nx.kg:0;
+      return `<tr><td>${w.date}</td><td>${fmt(w.kg,1)} kg</td>
+        <td class="delta ${d>0.05?'dn':d<-0.05?'up':'flat'}">${nx?(d>0?'+':'')+fmt(d,1):'—'}</td>
+        <td><button class="link wdel" data-d="${w.date}">削除</button></td></tr>`;}).join('')}</tbody></table>`
+      :'<div class="empty">まだ記録がありません。</div>'}
+  </div>`;
+}
+function goalPanel(fc,g,maNow){
+  const rest=maNow?g.kg-maNow:0;
+  let msg;
+  if(!fc)msg='<p class="muted">予測には体重の記録が4件以上必要です。数日ぶん記録すると予測が出ます。</p>';
+  else if(fc.done)msg=`<p style="font-size:15px;font-weight:700;color:var(--run)">目標に到達しています（7日平均 ${fmt(fc.cur,1)}kg）</p>`;
+  else if(fc.off)msg=`<p class="muted">現在のペース（週 ${fc.slope!==null?(fc.slope>0?'+':'')+fmt(fc.slope*7,2):'—'}kg）では目標に近づいていません。残り ${fmt(Math.abs(rest),1)}kg です。</p>`;
+  else if(fc.slope===null)msg='<p class="muted">傾向を計算するには記録がもう少し必要です。</p>';
+  else{
+    const dt=fc.date;
+    msg=`<div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
+      <span class="muted">到達予測</span>
+      <b class="num" style="font-size:22px">${dt.getFullYear()}年${dt.getMonth()+1}月${dt.getDate()}日ごろ</b></div>
+      <p class="muted" style="margin:4px 0 0">残り ${fmt(Math.abs(rest),1)}kg。現在のペース 週 ${(fc.slope>0?'+':'')+fmt(fc.slope*7,2)}kg で約 ${fc.days} 日後。</p>`;
+    if(g.date){
+      const diff=Math.round((parseD(g.date)-dt)/86400000);
+      msg+=`<p class="muted" style="margin-top:4px">目標日 ${g.date} に対して ${diff>=0?`${diff}日前倒し`:`${-diff}日遅れ`}のペースです。</p>`;
+    }
+  }
+  return `<div class="hr"></div>${msg}`;
+}
+function weightChart(list,goal){
+  const W=600,H=215,pl=38,pr=14,pt=16,pb=26;
+  const ma=movingAvg(list);
+  const t=list.map(w=>parseD(w.date).getTime());
+  const t0=Math.min(...t),t1=Math.max(...t);
+  const vals=list.map(w=>w.kg).concat(ma.map(w=>w.kg));
+  let lo=Math.min(...vals),hi=Math.max(...vals);
+  const gk=goal&&goal.kg?+goal.kg:null;
+  const showGoal=gk!==null&&gk>lo-15&&gk<hi+15;
+  if(showGoal){lo=Math.min(lo,gk);hi=Math.max(hi,gk);}
+  const padv=Math.max(0.6,(hi-lo)*0.2);lo-=padv;hi+=padv;
+  const X=i=>pl+(t1===t0?0.5:(t[i]-t0)/(t1-t0))*(W-pl-pr);
+  const Y=k=>pt+(hi-k)/(hi-lo)*(H-pt-pb);
+  const rawPts=list.map((w,i)=>`${X(i).toFixed(1)},${Y(w.kg).toFixed(1)}`).join(' ');
+  const maPts=ma.map((w,i)=>`${X(i).toFixed(1)},${Y(w.kg).toFixed(1)}`).join(' ');
+  const ticks=[hi,(hi+lo)/2,lo];
+  const grid=ticks.map(k=>`<line x1="${pl}" y1="${Y(k).toFixed(1)}" x2="${W-pr}" y2="${Y(k).toFixed(1)}" stroke="#CDD4CE" stroke-width="1" stroke-dasharray="2 3"/>
+    <text x="${pl-6}" y="${(Y(k)+3).toFixed(1)}" text-anchor="end">${fmt(k,1)}</text>`).join('');
+  const dots=list.map((w,i)=>`<circle cx="${X(i).toFixed(1)}" cy="${Y(w.kg).toFixed(1)}" r="2.2" fill="#2B2FC7" opacity="0.4"/>`).join('');
+  const last=ma[ma.length-1];
+  const goalLine=showGoal?`<line x1="${pl}" y1="${Y(gk).toFixed(1)}" x2="${W-pr}" y2="${Y(gk).toFixed(1)}" stroke="#B03A24" stroke-width="1.6" stroke-dasharray="6 4"/>
+    <text x="${W-pr}" y="${(Y(gk)-6).toFixed(1)}" text-anchor="end" fill="#B03A24">GOAL ${fmt(gk,1)}</text>`:'';
+  const lbl=d=>{const x=parseD(d);return (x.getMonth()+1)+'/'+x.getDate();};
+  return `<svg class="wchart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="体重の推移と7日移動平均">
+    ${grid}${goalLine}
+    <polyline points="${rawPts}" fill="none" stroke="#2B2FC7" stroke-width="1.2" opacity="0.35" stroke-linejoin="round"/>
+    ${dots}
+    <polyline points="${maPts}" fill="none" stroke="#141C26" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${X(list.length-1).toFixed(1)}" cy="${Y(last.kg).toFixed(1)}" r="4" fill="#141C26"/>
+    <text x="${pl}" y="${H-8}">${lbl(list[0].date)}</text>
+    <text x="${W-pr}" y="${H-8}" text-anchor="end">${lbl(list[list.length-1].date)}</text>
+  </svg>`;
+}
+
+/* --- 種目 --- */
+function viewEx(){
+  const rows=D.exercises.map(x=>{
+    const es=D.workouts.filter(w=>w.type==='strength'&&w.exercise===x.id);
+    const vol=es.reduce((a,w)=>a+volume(w),0);
+    const mw=Math.max(0,...es.map(maxW)),rm=Math.max(0,...es.map(bestE1rm));
+    const last=[...es].sort((a,b)=>a.date<b.date?1:-1)[0];
+    return `<tr><td>${esc(x.name)}<br><span class="muted" style="font-size:11px">${esc(x.part)} ・ ${last?last.date:'記録なし'}</span></td>
+      <td>${fmt(vol)}</td><td>${mw?fmt(mw,1):'—'}</td><td>${rm?fmt(rm,1):'—'}</td>
+      <td><button class="link exdel" data-id="${x.id}">削除</button></td></tr>`;}).join('');
+  return `<div class="card">
+    <p class="eyebrow">Exercises</p>
+    <h2>種目ごとの積み上げ</h2>
+    <p class="muted">総重量は全期間の合計。推定1RMは Epley 式（重量×(1+回数÷30)）です。</p>
+    <div class="hr"></div>
+    ${D.exercises.length?`<table><thead><tr><th>種目</th><th>総重量kg</th><th>最大kg</th><th>推定1RM</th><th></th></tr></thead><tbody>${rows}</tbody></table>`:'<div class="empty">種目がまだありません。</div>'}
+    <div class="hr"></div>
+    <div class="row f"><div style="flex:2"><label>種目名</label><input id="x_name" placeholder="インクラインベンチプレス"></div>
+      <div><label>部位</label><select id="x_part">${['胸','背中','脚','肩','腕','体幹','その他'].map(p=>`<option>${p}</option>`).join('')}</select></div></div>
+    <button class="btn" id="x_add">種目を追加する</button>
+  </div>`;
+}
+
+/* --- 週次レポート --- */
+function viewRep(){
+  const cur=addD(weekStart(new Date()),weekOffset*7),nxt=addD(cur,7),prv=addD(cur,-7);
+  const now=summarize(D.workouts.filter(w=>inRange(w,cur,nxt)));
+  const pre=summarize(D.workouts.filter(w=>inRange(w,prv,cur)));
+  const label=`${cur.getMonth()+1}/${cur.getDate()} – ${addD(nxt,-1).getMonth()+1}/${addD(nxt,-1).getDate()}`;
+
+  const weeks=[];
+  for(let i=7;i>=0;i--){const a=addD(cur,-7*i),b=addD(a,7);weeks.push({a,vol:summarize(D.workouts.filter(w=>inRange(w,a,b))).vol});}
+  const mx=Math.max(1,...weeks.map(w=>w.vol));
+  const unit=Math.max(1,Math.ceil(mx/16/100)*100);
+  const chart=weeks.map((w,i)=>{
+    const n=Math.min(20,Math.round(w.vol/unit));
+    const pl=Array.from({length:n},(_,j)=>`<div class="plate" style="width:${34+((j%2)?10:0)+Math.max(0,10-j)}%"></div>`).join('');
+    return `<div class="col ${i===7?'now':''}"><div class="vv">${w.vol?fmt(w.vol/1000,1)+'t':''}</div>
+      <div class="plates">${pl}</div><div class="lb">${w.a.getMonth()+1}/${w.a.getDate()}</div></div>`;}).join('');
+
+  const ids=[...new Set(D.workouts.filter(w=>w.type==='strength'&&(inRange(w,cur,nxt)||inRange(w,prv,cur))).map(w=>w.exercise))];
+  const exRows=ids.map(id=>{
+    const n=D.workouts.filter(w=>w.type==='strength'&&w.exercise===id&&inRange(w,cur,nxt));
+    const p=D.workouts.filter(w=>w.type==='strength'&&w.exercise===id&&inRange(w,prv,cur));
+    const nv=n.reduce((a,w)=>a+volume(w),0),pv=p.reduce((a,w)=>a+volume(w),0);
+    const nr=Math.max(0,...n.map(bestE1rm)),pr=Math.max(0,...p.map(bestE1rm));
+    const d=delta(nv,pv);
+    return{nv,html:`<tr><td>${esc(exName(id))}</td><td>${fmt(nv)}</td><td class="delta ${d.c}">${d.t}</td>
+      <td>${nr?fmt(nr,1):'—'}${nr&&pr?`<br><span class="delta ${nr>pr?'up':nr<pr?'dn':'flat'}" style="font-size:11px">${nr>pr?'+':''}${fmt(nr-pr,1)}</span>`:''}</td></tr>`};
+  }).sort((a,b)=>b.nv-a.nv).map(x=>x.html).join('');
+
+  const parts={};
+  D.workouts.filter(w=>w.type==='strength'&&inRange(w,cur,nxt)).forEach(w=>{const p=exPart(w.exercise);parts[p]=(parts[p]||0)+volume(w);});
+  const ptot=Object.values(parts).reduce((a,b)=>a+b,0);
+
+  const wNow=D.weights.filter(w=>{const d=parseD(w.date);return d>=cur&&d<nxt;});
+  const wPre=D.weights.filter(w=>{const d=parseD(w.date);return d>=prv&&d<cur;});
+  const avg=a=>a.length?a.reduce((x,w)=>x+w.kg,0)/a.length:0;
+  const wa=avg(wNow),wb=avg(wPre);
+
+  const dv=delta(now.vol,pre.vol),dk=delta(now.km,pre.km),dc=delta(now.kcal,pre.kcal),ds=delta(now.sets,pre.sets);
+  const kg=weightOn(today());
+  return `<div class="card">
+    <div class="wknav">
+      <button class="ghost" id="w_prev">◀ 前の週</button>
+      <b class="num">${label}${weekOffset===0?'（今週）':weekOffset===-1?'（先週）':''}</b>
+      <button class="ghost" id="w_next" ${weekOffset>=0?'disabled style="opacity:.35"':''}>次の週 ▶</button>
+    </div></div>
+
+  <div class="grid2" style="margin-top:14px">
+    <div class="stat"><div class="k">総重量</div><div class="v">${fmt(now.vol)}<small>kg</small></div><div class="delta ${dv.c}">${dv.t} 前週比</div></div>
+    <div class="stat"><div class="k">総セット数</div><div class="v">${now.sets}<small>set</small></div><div class="delta ${ds.c}">${ds.t} 前週比</div></div>
+    <div class="stat"><div class="k">走行距離</div><div class="v">${fmt(now.km,1)}<small>km</small></div><div class="delta ${dk.c}">${dk.t} 前週比</div></div>
+    <div class="stat"><div class="k">消費カロリー</div><div class="v">${fmt(now.kcal)}<small>kcal</small></div><div class="delta ${dc.c}">${dc.t} 前週比</div></div>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Weekly Volume ／ 直近8週</p>
+    <div class="chart">${chart}</div>
+    <p class="muted" style="margin-top:10px">プレート1枚 = ${fmt(unit)}kg。トレーニング日数 ${now.days}日（前週 ${pre.days}日）／ 走行時間 ${fmt(now.rmin)}分。</p>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">体重</p>
+    ${wa?`<div style="display:flex;justify-content:space-between;align-items:baseline"><span class="muted">週平均</span><b class="num" style="font-size:24px">${fmt(wa,1)} kg</b></div>
+      ${wb?`<div style="display:flex;justify-content:space-between;margin-top:4px"><span class="muted">前週平均 ${fmt(wb,1)}kg との差</span>
+      <b class="num delta ${wa>wb+0.05?'dn':wa<wb-0.05?'up':'flat'}" style="font-size:18px">${wa>wb?'+':''}${fmt(wa-wb,2)} kg</b></div>`:'<p class="muted">前週の体重記録がないため比較できません。</p>'}`
+      :'<div class="empty">この週の体重記録はありません。</div>'}
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">種目別の伸び</p>
+    ${exRows?`<table><thead><tr><th>種目</th><th>総重量kg</th><th>前週比</th><th>推定1RM</th></tr></thead><tbody>${exRows}</tbody></table>`:'<div class="empty">この週の筋トレ記録はまだありません。</div>'}
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">部位バランス</p>
+    ${ptot?Object.entries(parts).sort((a,b)=>b[1]-a[1]).map(([p,v])=>`
+      <div style="margin-bottom:9px">
+        <div style="display:flex;justify-content:space-between;font-size:12px"><span>${esc(p)}</span><span class="num">${fmt(v)}kg ・ ${fmt(v/ptot*100)}%</span></div>
+        <div style="height:7px;background:var(--iron-soft);border-radius:4px;overflow:hidden;margin-top:3px"><div style="height:100%;width:${v/ptot*100}%;background:var(--iron)"></div></div>
+      </div>`).join(''):'<div class="empty">記録がありません。</div>'}
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">カロリー</p>
+    <p class="muted">推定基礎代謝 <b class="num">${fmt(bmr(kg))}</b> kcal/日 ・ 活動込みの消費目安 <b class="num">${fmt(tdee(kg))}</b> kcal/日（体重 ${fmt(kg,1)}kg で計算）</p>
+    <div class="hr"></div>
+    <div style="display:flex;justify-content:space-between"><span class="muted">今週のトレーニング消費</span><b class="num" style="font-size:20px">${fmt(now.kcal)} kcal</b></div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px"><span class="muted">生活込みの週間総消費（目安）</span><b class="num" style="font-size:20px">${fmt(tdee(kg)*7+now.kcal)} kcal</b></div>
+  </div>`;
+}
+
+/* --- リリースノート --- */
+function viewRel(){
+  return `<div class="card">
+    <p class="eyebrow">Release notes</p>
+    <h2>更新履歴</h2>
+    <p class="muted">現在のバージョン v${APP_VERSION}</p>
+    <div class="hr"></div>
+    ${RELEASES.map(r=>`<div class="note"><div class="ver">v${r.v}</div><div class="dt">${r.d}</div>
+      <ul>${r.items.map(i=>`<li>${esc(i)}</li>`).join('')}</ul></div>`).join('')}
+    <button class="ghost" id="rel_back" style="width:100%">設定に戻る</button>
+  </div>`;
+}
+
+/* --- 設定 --- */
+function viewSet(){
+  const p=D.profile,cur=latestWeight(),kg=weightOn(today());
+  const drv=storageService.driver();
+  return `<div class="card">
+    <p class="eyebrow">Profile</p>
+    <div class="row f">
+      <div><label>年齢</label><input type="number" id="p_age" value="${p.age}"></div>
+      <div><label>身長 (cm)</label><input type="number" id="p_h" value="${p.height}"></div></div>
+    <div class="f"><label>性別</label><select id="p_sex">
+      <option value="m" ${p.sex==='m'?'selected':''}>男性</option>
+      <option value="f" ${p.sex==='f'?'selected':''}>女性</option>
+      <option value="x" ${p.sex==='x'?'selected':''}>指定しない</option></select></div>
+    <div class="f"><label>日常の活動量</label><select id="p_act">
+      ${Object.entries(ACT).map(([k,l])=>`<option value="${k}" ${p.act==+k?'selected':''}>${l}</option>`).join('')}</select></div>
+    <button class="btn" id="p_save">プロフィールを保存</button>
+    <p class="muted" style="margin:10px 0 0">現在の体重 ${cur?fmt(cur.kg,1)+'kg（'+cur.date+'）':'未記録'} ・ 基礎代謝 ${fmt(bmr(kg))} kcal/日</p>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Reminder</p>
+    <h3>土曜日の体重チェック</h3>
+    <p class="muted">毎週土曜（開いていなければ日曜）に、体重を記録する画面を表示します。</p>
+    <div class="hr"></div>
+    <label style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink)">
+      <input type="checkbox" id="p_rem" ${D.meta.remindOff?'':'checked'} style="width:auto;margin:0"> お知らせを表示する</label>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Backup</p>
+    <h3>データの書き出しと復元</h3>
+    <p class="muted">保存先 <span class="drv">${storageService.driverLabel()}</span>${drv==='local'?'：この端末のこのブラウザにのみ保存されます。':drv==='app'?'：この環境では localStorage が使えないため、アプリ側の保存領域を使用しています。ダウンロードして自分のブラウザで開くと localStorage で動作します。':'：保存が有効になっていません。必ずバックアップを取ってください。'}</p>
+    <p class="muted" style="margin-top:6px">端末の変更・サイトデータの削除でデータは失われます。定期的にJSONで書き出してください。</p>
+    <div class="hr"></div>
+    <button class="btn" id="b_export" style="margin-bottom:8px">JSONファイルを書き出す</button>
+    <button class="ghost" id="b_text" style="width:100%;margin-bottom:8px">テキストで表示してコピー</button>
+    <button class="ghost" id="b_import" style="width:100%">バックアップから復元する</button>
+  </div>
+
+  <div class="card">
+    <p class="eyebrow">Data</p>
+    <p class="muted">記録 ${D.workouts.length} 件、種目 ${D.exercises.length} 件、体重 ${D.weights.length} 件。</p>
+    <div class="hr"></div>
+    <button class="ghost" id="d_csv" style="width:100%;margin-bottom:8px">CSVで書き出す</button>
+    <button class="ghost" id="d_rel" style="width:100%;margin-bottom:8px">リリースノートを見る（v${APP_VERSION}）</button>
+    <button class="ghost" id="d_reset" style="width:100%;color:var(--down)">すべてのデータを削除</button>
+  </div>`;
+}
+
+/* ---------- events ---------- */
+function bind(){
+  const $=id=>document.getElementById(id);
+  document.querySelectorAll('.modes button').forEach(b=>b.onclick=()=>{mode=b.dataset.m;render();});
+  document.querySelectorAll('.edit').forEach(b=>b.onclick=()=>editDialog(b.dataset.id));
+  document.querySelectorAll('.del').forEach(b=>b.onclick=async()=>{
+    if(!confirm('この記録を削除します。よろしいですか？'))return;
+    D=await storageService.deleteWorkout(b.dataset.id);render();toast('記録を削除しました');});
+
+  if(tab==='home'){
+    $('c_prev').onclick=()=>{calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()-1,1);render();};
+    $('c_next').onclick=()=>{calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+1,1);render();};
+    document.querySelectorAll('.cell[data-d]').forEach(c=>c.onclick=()=>{selDate=c.dataset.d;render();});
+    $('h_add').onclick=()=>{draft.date=selDate;tab='log';render();window.scrollTo(0,0);};
+  }
+
+  if(tab==='log'){
+    $('d_date').onchange=e=>{draft.date=e.target.value;render();};
+    if(mode==='strength'){
+      $('d_ex').onchange=e=>{
+        draft.exId=e.target.value;
+        const p=draft.exId?lastFor(draft.exId,draft.date):null;
+        if(p&&draft.sets.every(s=>!s.weight&&!s.reps))draft.sets=p.sets.map(s=>({weight:s.weight,reps:s.reps}));
+        render();};
+      $('d_new').onclick=()=>{tab='ex';render();};
+      $('d_copy')&&($('d_copy').onclick=()=>{const p=lastFor(draft.exId,draft.date);draft.sets=p.sets.map(s=>({weight:s.weight,reps:s.reps}));render();});
+      document.querySelectorAll('.s_w').forEach(i=>i.oninput=e=>{draft.sets[+e.target.dataset.i].weight=e.target.value;refreshTotal();});
+      document.querySelectorAll('.s_r').forEach(i=>i.oninput=e=>{draft.sets[+e.target.dataset.i].reps=e.target.value;refreshTotal();});
+      document.querySelectorAll('.s_del').forEach(b=>b.onclick=()=>{if(draft.sets.length>1){draft.sets.splice(+b.dataset.i,1);render();}});
+      $('d_add').onclick=()=>{const l=draft.sets[draft.sets.length-1];draft.sets.push({weight:l.weight,reps:l.reps});render();};
+      $('d_min').oninput=e=>{draft.min=e.target.value;refreshTotal();};
+      $('d_memo').oninput=e=>{draft.memo=e.target.value;};
+      $('d_save').onclick=saveStrength;
+    }else{
+      $('r_km').oninput=e=>{draft.km=e.target.value;refreshTotal();};
+      $('r_min').oninput=e=>{draft.rmin=e.target.value;refreshTotal();};
+      $('r_memo').oninput=e=>{draft.memo=e.target.value;};
+      $('r_save').onclick=saveRun;
+    }
+  }
+
+  if(tab==='hist'){
+    document.querySelectorAll('.hf').forEach(c=>c.onclick=()=>{histFilter=c.dataset.f;histLimit=25;render();});
+    $('h_more')&&($('h_more').onclick=()=>{histLimit+=25;render();});
+  }
+
+  if(tab==='wt'){
+    $('w_add').onclick=async()=>{
+      const kg=+$('w_kg').value;if(!kg){toast('体重を入力してください');return;}
+      D=await storageService.saveWeight($('w_date').value,kg);render();toast('体重を記録しました');};
+    document.querySelectorAll('.wr').forEach(c=>c.onclick=()=>{wRange=+c.dataset.r;render();});
+    document.querySelectorAll('.wdel').forEach(b=>b.onclick=async()=>{
+      if(!confirm('この体重の記録を削除します。よろしいですか？'))return;
+      D=await storageService.deleteWeight(b.dataset.d);render();toast('削除しました');});
+    $('g_save').onclick=async()=>{
+      const kg=+$('g_kg').value;if(!kg){toast('目標体重を入力してください');return;}
+      D=await storageService.saveGoal({kg,date:$('g_date').value||null});render();toast('目標を保存しました');};
+    $('g_clear')&&($('g_clear').onclick=async()=>{D=await storageService.saveGoal(null);render();toast('目標を解除しました');});
+  }
+
+  if(tab==='ex'){
+    $('x_add').onclick=async()=>{
+      const n=$('x_name').value.trim();if(!n){toast('種目名を入力してください');return;}
+      D=await storageService.saveExercise({name:n,part:$('x_part').value});render();toast('種目を追加しました');};
+    document.querySelectorAll('.exdel').forEach(b=>b.onclick=async()=>{
+      const n=D.workouts.filter(w=>w.exercise===b.dataset.id).length;
+      if(!confirm(n?`この種目には ${n} 件の記録があります。種目を削除しても記録は残ります。削除しますか？`:'この種目を削除します。よろしいですか？'))return;
+      D=await storageService.deleteExercise(b.dataset.id);render();});
+  }
+
+  if(tab==='rep'){
+    $('w_prev').onclick=()=>{weekOffset--;render();};
+    $('w_next').onclick=()=>{if(weekOffset<0){weekOffset++;render();}};
+  }
+
+  if(tab==='rel'){$('rel_back').onclick=()=>{tab='set';render();window.scrollTo(0,0);};}
+
+  if(tab==='set'){
+    $('p_save').onclick=async()=>{
+      D=await storageService.saveProfile({age:+$('p_age').value,height:+$('p_h').value,sex:$('p_sex').value,act:+$('p_act').value});
+      render();toast('プロフィールを保存しました');};
+    $('p_rem').onchange=async e=>{D=await storageService.saveMeta({remindOff:!e.target.checked});
+      toast(e.target.checked?'土曜日にお知らせします':'お知らせを止めました');};
+    $('b_export').onclick=exportJsonFile;
+    $('b_text').onclick=()=>showText('バックアップ（JSON）',storageService.exportJson());
+    $('b_import').onclick=pickImport;
+    $('d_csv').onclick=()=>showText('CSV',buildCsv());
+    $('d_rel').onclick=()=>{tab='rel';render();window.scrollTo(0,0);};
+    $('d_reset').onclick=async()=>{
+      if(!confirm('すべての記録・種目・体重・プロフィールを削除します。元に戻せません。'))return;
+      if(!confirm('本当に削除しますか？ 先にバックアップの書き出しをおすすめします。'))return;
+      D=await storageService.reset();tab='home';render();};
+  }
+}
+function refreshTotal(){
+  const kg=weightOn(draft.date),t=document.querySelector('.total');
+  if(!t)return;
+  if(mode==='strength'){
+    const vol=draft.sets.reduce((a,s)=>a+(+s.weight||0)*(+s.reps||0),0);
+    t.innerHTML=`<span><small>この記録の総重量</small><br><b class="num">${fmt(vol)}</b> kg</span>
+      <span style="text-align:right"><small>推定消費</small><br><b class="num" style="font-size:20px">${fmt(strKcal(+draft.min||draft.sets.length*3,kg))}</b> kcal</span>`;
+  }else{
+    const p=(+draft.km>0&&+draft.rmin>0)?(+draft.rmin)/(+draft.km):0;
+    t.innerHTML=`<span><small>平均ペース</small><br><b class="num">${paceStr(p)}</b> /km</span>
+      <span style="text-align:right"><small>推定消費</small><br><b class="num" style="font-size:20px">${fmt(runKcal(+draft.km,+draft.rmin,kg))}</b> kcal</span>`;
+  }
+}
+async function saveStrength(){
+  if(!draft.exId){toast('種目を選んでください');return;}
+  const sets=draft.sets.filter(s=>+s.weight>0&&+s.reps>0).map(s=>({weight:+s.weight,reps:+s.reps}));
+  if(!sets.length){toast('重量と回数を入力してください');return;}
+  D=await storageService.saveWorkout({date:draft.date,type:'strength',exercise:draft.exId,sets,minutes:+draft.min||null,memo:draft.memo||''});
+  draft.sets=[{weight:'',reps:''},{weight:'',reps:''},{weight:'',reps:''}];draft.min='';draft.memo='';
+  render();toast('記録しました');
+}
+async function saveRun(){
+  if(!(+draft.km>0)||!(+draft.rmin>0)){toast('距離と時間を入力してください');return;}
+  D=await storageService.saveWorkout({date:draft.date,type:'run',distance:+draft.km,minutes:+draft.rmin,memo:draft.memo||''});
+  draft.km='';draft.rmin='';draft.memo='';render();toast('記録しました');
+}
+
+/* --- 編集ダイアログ --- */
+function editDialog(id){
+  const w=D.workouts.find(x=>x.id===id);if(!w)return;
+  const dlg=document.getElementById('dlg');
+  const body=w.type==='strength'?`
+    <label>セット（重量 × 回数）</label>
+    <div id="e_sets">${w.sets.map((s,i)=>`<div class="set">
+      <span class="n">${i+1}</span>
+      <input type="number" inputmode="decimal" class="e_w" data-i="${i}" value="${s.weight}"><span class="u">kg</span>
+      <span class="x">×</span>
+      <input type="number" inputmode="numeric" class="e_r" data-i="${i}" value="${s.reps}"><span class="u">回</span></div>`).join('')}</div>
+    <div class="f" style="margin-top:10px"><label>所要時間（分・任意）</label><input type="number" inputmode="numeric" id="e_min" value="${w.minutes||''}"></div>`
+  :`<div class="row f">
+      <div><label>距離 (km)</label><input type="number" inputmode="decimal" id="e_km" value="${w.distance}"></div>
+      <div><label>時間 (分)</label><input type="number" inputmode="decimal" id="e_min" value="${w.minutes}"></div></div>`;
+  document.getElementById('dlgBody').innerHTML=`
+    <p class="eyebrow">Edit</p>
+    <h2>${w.type==='strength'?esc(exName(w.exercise)):'ランニング'}</h2>
+    <div class="f" style="margin-top:12px"><label>日付</label><input type="date" id="e_date" value="${w.date}"></div>
+    ${body}
+    <div class="f"><label>メモ</label><input id="e_memo" value="${esc(w.memo)}"></div>
+    <button class="btn" id="e_save" style="margin-bottom:8px">変更を保存</button>
+    <button class="ghost" id="e_cancel" style="width:100%">キャンセル</button>`;
+  dlg.showModal();
+  document.getElementById('e_cancel').onclick=()=>dlg.close();
+  document.getElementById('e_save').onclick=async()=>{
+    const patch={date:document.getElementById('e_date').value,memo:document.getElementById('e_memo').value};
+    if(w.type==='strength'){
+      const ws=[...document.querySelectorAll('.e_w')],rs=[...document.querySelectorAll('.e_r')];
+      const sets=ws.map((el,i)=>({weight:+el.value,reps:+rs[i].value})).filter(s=>s.weight>0&&s.reps>0);
+      if(!sets.length){toast('重量と回数を入力してください');return;}
+      patch.sets=sets;patch.minutes=+document.getElementById('e_min').value||null;
+    }else{
+      const km=+document.getElementById('e_km').value,mn=+document.getElementById('e_min').value;
+      if(!(km>0)||!(mn>0)){toast('距離と時間を入力してください');return;}
+      patch.distance=km;patch.minutes=mn;
+    }
+    D=await storageService.updateWorkout(id,patch);dlg.close();render();toast('変更を保存しました');
+  };
+}
+
+/* --- 土曜の体重リマインド --- */
+function weighPrompt(){
+  if(!D||!D.profile||D.meta.remindOff)return;
+  const d=new Date(),day=d.getDay();
+  if(day!==6&&day!==0)return;
+  const wk=iso(weekStart(d));
+  if(D.meta.weighWeek===wk)return;
+  if(D.weights.some(w=>w.date===today()))return;
+  const cur=latestWeight(),dlg=document.getElementById('dlg');
+  document.getElementById('dlgBody').innerHTML=`
+    <p class="eyebrow">Weekly check</p>
+    <h2>今週の体重を記録しましょう</h2>
+    <p class="muted">${cur?`前回は ${cur.date} に ${fmt(cur.kg,1)}kg。`:'まだ体重の記録がありません。'} 変わっていなければ「変更なし」で今日の記録として引き継げます。</p>
+    <div class="f" style="margin-top:14px"><label>今日の体重 (kg)</label>
+      <input type="number" step="0.1" inputmode="decimal" id="q_kg" placeholder="${cur?fmt(cur.kg,1):'65.0'}"></div>
+    <button class="btn" id="q_save" style="margin-bottom:8px">この体重で記録する</button>
+    <div class="row">
+      <button class="ghost" id="q_same" ${cur?'':'disabled style="opacity:.4"'}>変更なし</button>
+      <button class="ghost" id="q_later">あとで</button></div>`;
+  dlg.showModal();
+  const close=async mark=>{if(mark)D=await storageService.saveMeta({weighWeek:wk});dlg.close();render();};
+  document.getElementById('q_save').onclick=async()=>{
+    const kg=+document.getElementById('q_kg').value;
+    if(!kg){toast('体重を入力してください');return;}
+    D=await storageService.saveWeight(today(),kg);await close(true);toast('体重を記録しました');};
+  document.getElementById('q_same').onclick=async()=>{
+    if(!cur)return;D=await storageService.saveWeight(today(),cur.kg);await close(true);toast(`変更なしで記録しました（${fmt(cur.kg,1)}kg）`);};
+  document.getElementById('q_later').onclick=()=>close(false);
+}
+
+/* --- バックアップ / 復元 --- */
+function exportJsonFile(){
+  const json=storageService.exportJson();
+  const name=`training-backup-${today()}.json`;
+  try{
+    const blob=new Blob([json],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();
+    setTimeout(()=>{URL.revokeObjectURL(url);a.remove();},1000);
+    toast(`${name} を書き出しました`);
+  }catch(e){
+    showText('バックアップ（JSON）',json);
+    toast('ダウンロードできない環境のため、テキストで表示しました');
+  }
+}
+function pickImport(){
+  const f=document.getElementById('fileIn');
+  f.value='';
+  f.onchange=async()=>{
+    const file=f.files[0];if(!file)return;
+    if(!confirm('現在のデータを上書きします。よろしいですか？'))return;
+    try{
+      const text=await file.text();
+      D=await storageService.importJson(text);
+      tab='home';render();toast('バックアップから復元しました');
+    }catch(e){ alert('復元できませんでした。\n'+(e.message||e)); }
+  };
+  f.click();
+}
+function showText(title,text){
+  const d=document.getElementById('dlg');
+  document.getElementById('dlgBody').innerHTML=`<p class="eyebrow">${esc(title)}</p>
+    <p class="muted">下のテキストを全選択してコピーし、ファイルとして保存してください。</p>
+    <textarea id="txtBox" readonly>${esc(text)}</textarea>
+    <div class="row" style="margin-top:10px"><button class="ghost" id="txtSel">全選択</button><button class="btn" id="txtClose">閉じる</button></div>`;
+  d.showModal();
+  document.getElementById('txtSel').onclick=()=>{const b=document.getElementById('txtBox');b.focus();b.select();};
+  document.getElementById('txtClose').onclick=()=>d.close();
+}
+function buildCsv(){
+  const rows=[['date','type','exercise','part','weight_kg','reps','volume_kg','distance_km','minutes','kcal','bodyweight_kg','memo']];
+  [...D.workouts].sort((a,b)=>a.date<b.date?-1:1).forEach(w=>{
+    if(w.type==='strength')w.sets.forEach(s=>rows.push([w.date,'strength',exName(w.exercise),exPart(w.exercise),s.weight,s.reps,s.weight*s.reps,'','',Math.round(wKcal(w)/w.sets.length),'',(w.memo||'').replace(/,/g,'、')]));
+    else rows.push([w.date,'run','','','','','',w.distance,w.minutes,Math.round(wKcal(w)),'',(w.memo||'').replace(/,/g,'、')]);
+  });
+  storageService.getWeights().forEach(w=>rows.push([w.date,'bodyweight','','','','','','','','',w.kg,'']));
+  return rows.map(r=>r.join(',')).join('\n');
+}
+
+/* ---------- boot ---------- */
+(async()=>{
+  D=await storageService.init();
+  ready=true;render();
+  setTimeout(weighPrompt,400);
+})();
+</script>
+</body>
+</html>
